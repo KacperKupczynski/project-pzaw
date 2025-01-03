@@ -1,17 +1,25 @@
 <script>
-  let users = [];
+  import LoginForm from './components/Login.svelte';
+  import RegisterForm from './components/Register.svelte';
+  import { auth, logout } from './stores/auth.js';
 
-  const fetchUsers = async () => {
-      const response = await fetch('/api/users/');
-      users = await response.json();
-  };
+  let user = null;
 
-  fetchUsers();
+  $: auth.subscribe((state) => {
+      user = state;
+  });
+
+  function handleLogout() {
+      logout();
+  }
 </script>
 
-<h1>Lista użytkowników</h1>
-<ul>
-  {#each users as user}
-      <li>{user.name} ({user.email})</li>
-  {/each}
-</ul>
+<main>
+  {#if user.isAuthenticated}
+      <h1>Welcome, {user.username}!</h1>
+      <button on:click={handleLogout}>Logout</button>
+  {:else}
+      <LoginForm />
+      <RegisterForm />
+  {/if}
+</main>
