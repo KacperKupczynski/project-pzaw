@@ -1,25 +1,40 @@
 <script>
-  import LoginForm from './components/Login.svelte';
-  import RegisterForm from './components/Register.svelte';
-  import { auth, logout } from './stores/auth.js';
+  import { Router, Route, Link } from 'svelte-routing';
+  import Home from './components/Home.svelte';
+  import Sidebar from './components/Sidebar.svelte';
+  import TypeRacer from './components/TypeRacer.svelte';
+  import Login from './components/Login.svelte';
+  import { auth } from './stores/auth.js';
+  import { onMount } from 'svelte';
 
-  let user = null;
+  let isAuthenticated;
+  $: isAuthenticated = $auth.isAuthenticated;
 
-  $: auth.subscribe((state) => {
-      user = state;
+  onMount(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      auth.update(state => ({ ...state, isAuthenticated: true, token }));
+    }
   });
-
-  function handleLogout() {
-      logout();
-  }
 </script>
 
-<main>
-  {#if user.isAuthenticated}
-      <h1>Welcome, {user.username}!</h1>
-      <button on:click={handleLogout}>Logout</button>
-  {:else}
-      <LoginForm />
-      <RegisterForm />
-  {/if}
-</main>
+{#if isAuthenticated}
+  <Router>
+    <Sidebar />
+    <Route path="/" component={Home} />
+    <Route path="/typeracer" component={TypeRacer} />
+  </Router>
+{:else}
+  <Router>
+    <Route path="/" component={Login} />
+    <Route path="/login" component={Login} />
+  </Router>
+{/if}
+
+<style>
+  :global(body) {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+</style>

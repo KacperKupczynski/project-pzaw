@@ -1,10 +1,10 @@
 <script>
-import { login } from '../stores/auth.js';
-import { onMount } from 'svelte';
+    import { navigate } from 'svelte-routing';
+    import { login } from '../stores/auth.js'; // Import the login function from auth.js
 
-let username = '';
-let password = '';
-let errorMessage = '';
+    let username = '';
+    let password = '';
+    let errorMessage = '';
 
     async function handleLogin() {
         try {
@@ -21,9 +21,10 @@ let errorMessage = '';
             }
 
             const data = await response.json();
-            login(data.access, username); // Ustaw token i użytkownika
+            login(data.access, username); // Use the login function from auth.js
             localStorage.setItem('authToken', data.access);
             errorMessage = '';
+            navigate('/'); // Redirect to home or another page
         } catch (error) {
             errorMessage = error.message;
         }
@@ -41,3 +42,9 @@ let errorMessage = '';
         <p style="color: red;">{errorMessage}</p>
     {/if}
 </div>
+
+<style>
+    input {
+        margin-top: 10px;
+    }
+</style>
