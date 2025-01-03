@@ -13,9 +13,9 @@
 
 <nav>
     <ul>
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/typeracing">Type Racing</a></li>
-        <li><a href="/leaderboard">Leaderboard</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/typeracer">Type Racing</a></li>
+        <li><a href="/addtext">Add text</a></li>
     </ul>
     <div>
         <p>Logged in as: {username}</p>
