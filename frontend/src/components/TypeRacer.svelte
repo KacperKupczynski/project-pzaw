@@ -9,6 +9,7 @@
     let interval = null;
     let isRunning = false;
     let errorMessage = '';
+    let letterStates = [];
 
     onMount(() => {
         fetch('/api/text/', {
@@ -24,6 +25,7 @@
         })
         .then(data => {
             text = data.content; // Adjusted to handle a single object response
+            letterStates = text.split('').map(letter => ({ letter, state: 'default' }));
         })
         .catch(error => {
             errorMessage = error.message;
@@ -37,10 +39,9 @@
 
         isRunning = true;
         time = 0;
-        input = '';
         interval = setInterval(() => {
-            time++;
-        }, 1000);
+            time += 0.01;
+        }, 10);
     }
 
     function stop() {
@@ -76,21 +77,65 @@
             errorMessage = error.message;
         });
     }
+
+    $: if (input.length === 1 && !isRunning) {
+        start();
+    }
+
+    $: if (input.length === text.length) {
+        stop();
+    }
+
+    function handleInput(event) {
+        input = event.target.value;
+
+        for (let i = 0; i < text.length; i++) {
+            if (i < input.length) {
+                if (text[i] === input[i]) {
+                    letterStates[i].state = 'correct';
+                } else {
+                    letterStates[i].state = 'incorrect';
+                }
+            } else {
+                letterStates[i].state = 'default';
+            }
+        }
+    }
+
+    function getClass(state) {
+        return state === 'correct' ? 'correct' : state === 'incorrect' ? 'incorrect' : 'not-typed';
+    }
 </script>
 
-<div>
+<main>
     <h2>Type Racer</h2>
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>
     {/if}
-    <p>{text}</p>
-    <input type="text" bind:value={input} on:input={stop} />
-    <button on:click={start}>Start</button>
-    <button on:click={stop}>Stop</button>
-</div>
+    <div id="displayer">
+        {#each letterStates as { letter, state }, index}
+            <span class={getClass(state)}>{letter}</span>
+        {/each}
+    </div>
+    <input type="text" bind:value={input} on:input={handleInput} />
+
+    <p>Time: {time.toFixed(2)} seconds</p>
+</main>
 
 <style>
     input {
         margin-top: 10px;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+    }
+    .correct {
+        color: green;
+    }
+    .incorrect {
+        color: red;
+    }
+    .not-typed {
+        color: black;
     }
 </style>
