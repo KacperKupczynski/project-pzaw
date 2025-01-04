@@ -10,21 +10,6 @@
 </main>
 
 <style>
-  main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
-  }
 
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    p {
-        font-size: 1rem;
-    }
 </style>
 

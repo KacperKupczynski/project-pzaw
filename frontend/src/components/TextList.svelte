@@ -81,40 +81,52 @@
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>
     {/if}
-    <ul>
+    <div class="grid-container">
         {#each texts as text}
-            <li>
+            <div class="grid-item">
                 {#if editId === text.id}
                     <input type="text" bind:value={editText} />
                     <button on:click={handleUpdate}>Update</button>
                     <button on:click={() => { editId = null; editText = ''; }}>Cancel</button>
                 {:else}
-                    {text.content}
-                    <button on:click={() => handleEdit(text.id, text.content)}>Edit</button>
-                    <button on:click={() => handleDelete(text.id)}>Delete</button>
+                    <div class="text-content">{text.content}</div>
+                    <div class="button-container">
+                        <button on:click={() => handleEdit(text.id, text.content)}>Edit</button>
+                        <button on:click={() => handleDelete(text.id)}>Delete</button>
+                    </div>
                 {/if}
-            </li>
+            </div>
         {/each}
-    </ul>
+    </div>
 </main>
 
 <style>
-    ul {
-        list-style-type: none;
-        padding: 0;
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
     }
-    li {
-        margin: 10px 0;
-        padding: 10px;
+    .grid-item {
         border: 1px solid #ccc;
+        padding: 10px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
     }
-    button {
-        margin-left: 10px;
+    .text-content {
+        max-height: 100px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+    }
+    .button-container {
+        display: flex;
+        justify-content: space-between;
     }
     input {
-        flex: 1;
-        margin-right: 10px;
+        margin-top: 10px;
+    }
+    button {
+        padding: 5px 10px;
+        cursor: pointer;
     }
 </style>

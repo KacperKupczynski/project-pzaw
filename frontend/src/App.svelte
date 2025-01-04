@@ -27,6 +27,7 @@
     <Route path="/typeracer" component={TypeRacer} />
     <Route path="/addtext" component={Addtext} />
     <Route path="/list" component={TextList} />
+    <Route path="/login" component={Login} />
   </Router>
 {:else}
   <Router>

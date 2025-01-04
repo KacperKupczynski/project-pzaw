@@ -1,53 +1,65 @@
 <script>
     import { auth, logout } from '../stores/auth.js';
-    import { get } from 'svelte/store';
+    import { onMount } from 'svelte';
 
     let username;
+
     $: username = $auth.username;
 
     function handleLogout() {
         logout();
         window.location.href = '/login'; // Redirect to login page after logout
     }
+
+    onMount(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            auth.update(state => ({ ...state, isAuthenticated: true, token }));
+        }
+    });
 </script>
 
 <nav>
+    <a href="/">
+        <img src="/logo.png" alt="Logo" />
+    </a>
     <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/typeracer">Type Racing</a></li>
         <li><a href="/addtext">Add text</a></li>
-        <li><a href="/list">Text list</a></li>
+        <li><a href="/list">List of texts</a></li>
     </ul>
-    <div>
-        <p>Logged in as: {username}</p>
-        <button on:click={handleLogout}>Logout</button>
+    <div class="user-info">
+        {#if username}
+            <p>{username}</p>
+            <button on:click={handleLogout}>Logout</button>
+        {:else}
+            <p>Not logged in</p>
+            <a href="/login">Login</a>
+        {/if}
     </div>
 </nav>
 
 <style>
     nav {
-        width: 200px;
-        background-color: #383838;
-        height: 100vh;
-        padding: 20px;
+        height: 8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
     }
+    
     ul {
+        display: flex;
         list-style-type: none;
-        padding: 0;
+        gap: 1rem;
     }
     li {
-        margin: 10px 0;
-        cursor: pointer;
+        margin-right: 10px;
     }
     li:hover {
         font-weight: bold;
     }
-    div {
-        margin-top: 20px;
-    }
     button {
-        margin-top: 10px;
-        padding: 5px 10px;
         cursor: pointer;
     }
 </style>

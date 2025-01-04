@@ -56,6 +56,7 @@
         updateTypeRacer(time, text, input);
 
         const result = get(typeRacer);
+        const username = localStorage.getItem('username'); // Assuming the username is stored in localStorage
         fetch('/api/results/', {
             method: 'POST',
             headers: {
@@ -63,7 +64,7 @@
                 'Authorization': `Bearer ${localStorage.getItem('authToken')}`
             },
             body: JSON.stringify({
-                user: result.username, // Assuming the username is stored in the result
+                user: username, // Use the username from localStorage
                 text: text,
                 wpm: result.wpm,
                 accuracy: result.accuracy
@@ -115,27 +116,28 @@
 </script>
 
 <main>
-    <h2>Type Racer</h2>
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>
     {/if}
-    <div id="displayer">
+    <div class="displayer">
         {#each letterStates as { letter, state }, index}
             <span class={getClass(state)}>{letter}</span>
         {/each}
     </div>
-    <input type="text" bind:value={input} on:input={handleInput} />
+    <input type="text" bind:value={input} on:input={handleInput} placeholder="Enter a word here..."/>
 
     <p>Time: {time.toFixed(2)} seconds</p>
     <p>WPM: {wpm}</p>
 </main>
 
 <style>
+    main {
+        padding: 4rem;
+    }
     input {
         margin-top: 10px;
-        width: 100%;
         padding: 10px;
-        font-size: 16px;
+        font-size: 20px;
     }
     .correct {
         color: green;
@@ -144,6 +146,16 @@
         color: red;
     }
     .not-typed {
-        color: black;
+        color: rgb(151, 151, 151);
     }
+    .displayer {
+        color: white;
+    }
+    .displayer span {
+        font-size: 24px;
+    }
+    p {
+        font-size: 20px;
+    }
+
 </style>
