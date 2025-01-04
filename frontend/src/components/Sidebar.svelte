@@ -16,6 +16,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="/typeracer">Type Racing</a></li>
         <li><a href="/addtext">Add text</a></li>
+        <li><a href="/list">Text list</a></li>
     </ul>
     <div>
         <p>Logged in as: {username}</p>

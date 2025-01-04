@@ -10,6 +10,7 @@
     let isRunning = false;
     let errorMessage = '';
     let letterStates = [];
+    let wpm = 0;
 
     onMount(() => {
         fetch('/api/text/', {
@@ -41,6 +42,7 @@
         time = 0;
         interval = setInterval(() => {
             time += 0.01;
+            calculateWPM();
         }, 10);
     }
 
@@ -76,6 +78,11 @@
         .catch(error => {
             errorMessage = error.message;
         });
+    }
+
+    function calculateWPM() {
+        const wordsTyped = input.trim().split(/\s+/).length;
+        wpm = Math.floor((wordsTyped / (time / 60)));
     }
 
     $: if (input.length === 1 && !isRunning) {
@@ -120,6 +127,7 @@
     <input type="text" bind:value={input} on:input={handleInput} />
 
     <p>Time: {time.toFixed(2)} seconds</p>
+    <p>WPM: {wpm}</p>
 </main>
 
 <style>

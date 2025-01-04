@@ -31,7 +31,7 @@
     }
 </script>
 
-<div>
+<main>
     <h2>Login</h2>
     <form on:submit|preventDefault={handleLogin}>
         <input type="text" bind:value={username} placeholder="Username" required />
@@ -41,7 +41,10 @@
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>
     {/if}
-</div>
+    <p>or make an account here:
+        <a href="/register">Register</a>
+    </p>
+</main>
 
 <style>
     input {

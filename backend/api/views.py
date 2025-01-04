@@ -66,3 +66,18 @@ class AddTextView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class TextListView(generics.ListAPIView):
+    queryset = Text.objects.all()
+    serializer_class = TextSerializer
+    permission_classes = [IsAuthenticated]
+
+class EditTextView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Text.objects.all()
+    serializer_class = TextSerializer
+    permission_classes = [IsAuthenticated]
+
+class DeleteTextView(generics.DestroyAPIView):
+    queryset = Text.objects.all()
+    serializer_class = TextSerializer
+    permission_classes = [IsAuthenticated]

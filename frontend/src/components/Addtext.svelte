@@ -8,7 +8,7 @@
 
     async function handleAddText() {
         try {
-            const response = await fetch('/api/texts/', {
+            const response = await fetch('/api/add-text/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,7 +31,7 @@
     }
 </script>
 
-<div>
+<main>
     <h2>Add Text</h2>
     <form on:submit|preventDefault={handleAddText}>
         <textarea bind:value={content} placeholder="Enter text here" required></textarea>
@@ -43,7 +43,7 @@
     {#if successMessage}
         <p style="color: green;">{successMessage}</p>
     {/if}
-</div>
+</main>
 
 <style>
     textarea {

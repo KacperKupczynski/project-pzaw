@@ -5,6 +5,7 @@
   import TypeRacer from './components/TypeRacer.svelte';
   import Login from './components/Login.svelte';
   import Addtext from './components/Addtext.svelte';
+  import TextList from './components/TextList.svelte';
   import { auth } from './stores/auth.js';
   import { onMount } from 'svelte';
 
@@ -25,6 +26,7 @@
     <Route path="/" component={Home} />
     <Route path="/typeracer" component={TypeRacer} />
     <Route path="/addtext" component={Addtext} />
+    <Route path="/list" component={TextList} />
   </Router>
 {:else}
   <Router>
