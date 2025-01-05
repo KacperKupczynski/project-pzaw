@@ -1,6 +1,6 @@
 <script>
     import { navigate } from 'svelte-routing';
-    import { login } from '../stores/auth.js'; // Import the login function from auth.js
+    import { login } from '../stores/auth.js';
 
     let username = '';
     let password = '';
@@ -21,10 +21,11 @@
             }
 
             const data = await response.json();
-            login(data.access, username); // Use the login function from auth.js
-            localStorage.setItem('authToken', data.access);
+            login(data.token, data.username); // Use the login function from auth.js
+            localStorage.setItem('authToken', data.access); // Store the access token in localStorage
+            localStorage.setItem('refreshToken', data.refresh); // Store the refresh token in localStorage
             errorMessage = '';
-            navigate('/'); // Redirect to home or another page
+            navigate('/'); // Redirect to home page
         } catch (error) {
             errorMessage = error.message;
         }

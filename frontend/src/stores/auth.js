@@ -12,6 +12,8 @@ export function login(token, username) {
         token,
         username,
     });
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('username', username);
 }
 
 export function logout() {
@@ -21,4 +23,29 @@ export function logout() {
         username: null,
     });
     localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('refreshToken');
+}
+
+export async function refreshToken() {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+        const response = await fetch('/api/token/refresh/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ refresh: refreshToken }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('authToken', data.access);
+            auth.update(state => ({ ...state, token: data.access }));
+        } else {
+            logout();
+        }
+    } else {
+        logout();
+    }
 }

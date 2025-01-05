@@ -1,23 +1,42 @@
 <script>
-    import { auth, logout } from '../stores/auth.js';
+    import { auth, logout, refreshToken } from '../stores/auth.js';
     import { onMount } from 'svelte';
 
     let username;
 
     $: username = $auth.username;
 
-    function handleLogout() {
-        logout();
-        window.location.href = '/login'; // Redirect to login page after logout
+    async function handleLogout() {
+        try {
+            const response = await fetch('/api/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to logout');
+            }
+
+            logout();
+            window.location.href = '/login'; // Redirect to login page after logout
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     }
 
     onMount(() => {
         const token = localStorage.getItem('authToken');
-        if (token) {
-            auth.update(state => ({ ...state, isAuthenticated: true, token }));
+        const username = localStorage.getItem('username');
+        if (token && username) {
+            auth.update(state => ({ ...state, isAuthenticated: true, token, username }));
         }
+        refreshToken();
     });
-</script>
+    </script>
 
 <nav>
     <a href="/">
