@@ -1,6 +1,5 @@
 <script>
     import { auth, logout } from '../stores/auth.js';
-    import { onMount } from 'svelte';
 
     let username;
 
@@ -10,13 +9,6 @@
         logout();
         window.location.href = '/login'; // Redirect to login page after logout
     }
-
-    onMount(() => {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            auth.update(state => ({ ...state, isAuthenticated: true, token }));
-        }
-    });
 </script>
 
 <nav>
@@ -28,10 +20,12 @@
         <li><a href="/typeracer">Type Racing</a></li>
         <li><a href="/addtext">Add text</a></li>
         <li><a href="/list">List of texts</a></li>
+        <li><a href="/user/results">Your Results</a></li>
     </ul>
     <div class="user-info">
-        {#if username}
-            <p>{username}</p>
+        {#if $auth.isAuthenticated}
+            <p>Is logged: {$auth.isAuthenticated}</p>
+            <p>{$auth.username}</p>
             <button on:click={handleLogout}>Logout</button>
         {:else}
             <p>Not logged in</p>

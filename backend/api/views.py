@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.serializers import ModelSerializer
 import random
+from django.db.models import Avg
 
 class UserList(APIView):
     def get(self, request):
@@ -31,13 +32,35 @@ class ResultCreateView(generics.CreateAPIView):
     serializer_class = ResultSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        user = self.request.user
+        text_id = self.request.data.get('text')
+        try:
+            text = Text.objects.get(id=text_id)
+        except Text.DoesNotExist:
+            raise serializers.ValidationError("Text with this ID does not exist.")
+        serializer.save(user=user, text=text)
+
 class UserResultsView(generics.ListAPIView):
     serializer_class = ResultSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return Result.objects.filter(user=user)
+        user_id = self.kwargs['user_id']
+        return Result.objects.filter(user_id=user_id)
+
+class UserStatisticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        results = Result.objects.filter(user_id=user_id)
+        avg_wpm = results.aggregate(Avg('wpm'))['wpm__avg']
+        avg_accuracy = results.aggregate(Avg('accuracy'))['accuracy__avg']
+        return Response({
+            'average_wpm': avg_wpm,
+            'average_accuracy': avg_accuracy,
+            'total_results': results.count()
+        })
 
 class RegisterSerializer(ModelSerializer):
     class Meta:

@@ -11,6 +11,7 @@
     let errorMessage = '';
     let letterStates = [];
     let wpm = 0;
+    let textObject = null;
 
     onMount(() => {
         fetch('/api/text/', {
@@ -26,6 +27,7 @@
         })
         .then(data => {
             text = data.content; // Adjusted to handle a single object response
+            textObject = data; // Store the text object
             letterStates = text.split('').map(letter => ({ letter, state: 'default' }));
         })
         .catch(error => {
@@ -56,7 +58,6 @@
         updateTypeRacer(time, text, input);
 
         const result = get(typeRacer);
-        const username = localStorage.getItem('username'); // Assuming the username is stored in localStorage
         fetch('/api/results/', {
             method: 'POST',
             headers: {
@@ -64,8 +65,7 @@
                 'Authorization': `Bearer ${localStorage.getItem('authToken')}`
             },
             body: JSON.stringify({
-                user: username, // Use the username from localStorage
-                text: text,
+                text: textObject, 
                 wpm: result.wpm,
                 accuracy: result.accuracy
             })
@@ -115,12 +115,13 @@
     }
 </script>
 
+
 <main>
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>
     {/if}
     <div class="displayer">
-        {#each letterStates as { letter, state }, index}
+        {#each letterStates as { letter, state }}
             <span class={getClass(state)}>{letter}</span>
         {/each}
     </div>
