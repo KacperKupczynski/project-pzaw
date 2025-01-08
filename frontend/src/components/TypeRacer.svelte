@@ -12,6 +12,7 @@
     let letterStates = [];
     let wpm = 0;
     let textObject = null;
+    let showModal = false;
 
     onMount(() => {
         fetch('/api/text/', {
@@ -82,6 +83,8 @@
         .catch(error => {
             errorMessage = error.message;
         });
+
+        showModal = true; // Show the modal
     }
 
     function calculateWPM() {
@@ -116,6 +119,14 @@
     function getClass(state) {
         return state === 'correct' ? 'correct' : state === 'incorrect' ? 'incorrect' : 'not-typed';
     }
+
+    function closeModal() {
+        showModal = false;
+    }
+
+    function playAgain() {
+        location.reload();
+    }
 </script>
 
 <main>
@@ -131,6 +142,17 @@
 
     <p>Time: {time.toFixed(2)} seconds</p>
     <p>WPM: {wpm}</p>
+
+    {#if showModal}
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close" on:click={closeModal}>&times;</span>
+                <h2>Results</h2>
+                <p>WPM: {wpm}</p>
+                <button on:click={playAgain}>Play Again</button>
+            </div>
+        </div>
+    {/if}
 </main>
 
 <style>
@@ -141,6 +163,7 @@
         margin-top: 10px;
         padding: 10px;
         font-size: 20px;
+        background: #333333;
     }
     .correct {
         color: green;
@@ -159,5 +182,44 @@
     }
     p {
         font-size: 20px;
+    }
+    .modal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+        background-color: #333333;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
     }
 </style>

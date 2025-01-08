@@ -3,6 +3,7 @@
 
     let results = [];
     let errorMessage = '';
+    let averageWpm = 0;
 
     onMount(async () => {
         try {
@@ -18,10 +19,18 @@
             }
 
             results = await response.json();
+            calculateAverageWpm();
         } catch (error) {
             errorMessage = error.message;
         }
     });
+
+    function calculateAverageWpm() {
+        if (results.length > 0) {
+            const totalWpm = results.reduce((sum, result) => sum + result.wpm, 0);
+            averageWpm = parseFloat((totalWpm / results.length).toFixed(2));
+        }
+    }
 
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -36,13 +45,16 @@
     {:else if results.length === 0}
         <p>No results yet.</p>
     {:else}
-        <ul>
-            {#each results as result}
-                <li>
-                    {result.wpm} WPM, {result.accuracy}% Accuracy, {formatDate(result.created_at)}
-                </li>
-            {/each}
-        </ul>
+        <div>
+            <p>Average WPM: {averageWpm}</p>
+            <ul>
+                {#each results as result}
+                    <li>
+                        {result.wpm} WPM, {formatDate(result.created_at)}
+                    </li>
+                {/each}
+            </ul>
+        </div>
     {/if}
 </main>
 

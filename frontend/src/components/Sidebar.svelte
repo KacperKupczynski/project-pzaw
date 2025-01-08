@@ -24,7 +24,6 @@
     </ul>
     <div class="user-info">
         {#if $auth.isAuthenticated}
-            <p>Is logged: {$auth.isAuthenticated}</p>
             <p>{$auth.username}</p>
             <button on:click={handleLogout}>Logout</button>
         {:else}
@@ -40,8 +39,8 @@
         display: flex;
         align-items: center;
         justify-content: space-evenly;
-    }
-    
+        background: linear-gradient(179.985deg, #000000 0%, rgba(22, 22, 22, 79%) 58%, rgba(41, 41, 41, 0) 100%);
+    }       
     ul {
         display: flex;
         list-style-type: none;

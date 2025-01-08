@@ -3,13 +3,14 @@
 </script>
 
 <main>
-  <h1>Welcome to the Homea Pge</h1>
-  <p>This is the home page of your application.</p>
-  <h2>Go to the type racing</h2>
-    <a href="/typeracer">Type Racing</a>
+  <h1>What's your skill in typing?</h1>
+  <h2 class="blue">Finally a place, where you can practice that!</h2>
+  <a href="/typeracer">Start here</a>
 </main>
 
 <style>
-
+.blue {
+  color: #0F93B0;
+}
 </style>
 

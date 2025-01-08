@@ -33,6 +33,7 @@
 
 <main>
     <h2>Add Text</h2>
+    <p>Add text to the database, and then you can practice your typing on this text.</p>
     <form on:submit|preventDefault={handleAddText}>
         <textarea bind:value={content} placeholder="Enter text here" required></textarea>
         <button type="submit">Add Text</button>
