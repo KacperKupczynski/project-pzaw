@@ -7,6 +7,7 @@
   import Addtext from './components/Addtext.svelte';
   import TextList from './components/TextList.svelte';
   import { auth } from './stores/auth.js';
+  import UserResults from './components/UserResults.svelte';
   import { onMount } from 'svelte';
 
   let isAuthenticated;
@@ -28,6 +29,7 @@
     <Route path="/addtext" component={Addtext} />
     <Route path="/list" component={TextList} />
     <Route path="/login" component={Login} />
+    <Route path="/results" component={UserResults} />
   </Router>
 {:else}
   <Router>

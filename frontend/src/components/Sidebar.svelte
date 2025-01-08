@@ -20,7 +20,7 @@
         <li><a href="/typeracer">Type Racing</a></li>
         <li><a href="/addtext">Add text</a></li>
         <li><a href="/list">List of texts</a></li>
-        <li><a href="/user/results">Your Results</a></li>
+        <li><a href="/results">Your Results</a></li>
     </ul>
     <div class="user-info">
         {#if $auth.isAuthenticated}

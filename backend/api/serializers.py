@@ -12,9 +12,6 @@ class TextSerializer(serializers.ModelSerializer):
         fields = ['id', 'content']
         
 class ResultSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
-    text = serializers.PrimaryKeyRelatedField(queryset=Text.objects.all())
-
     class Meta:
         model = Result
-        fields = ['id', 'user', 'text', 'wpm', 'accuracy', 'created_at']
+        fields = ['user', 'wpm', 'accuracy', 'created_at']

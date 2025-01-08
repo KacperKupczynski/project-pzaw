@@ -58,14 +58,17 @@
         updateTypeRacer(time, text, input);
 
         const result = get(typeRacer);
-        fetch('/api/results/', {
+        console.log("Sending result:", {
+            wpm: result.wpm,
+            accuracy: result.accuracy
+        });
+        fetch('/api/result/', {  // Update the endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('authToken')}`
             },
             body: JSON.stringify({
-                text: textObject, 
                 wpm: result.wpm,
                 accuracy: result.accuracy
             })
@@ -115,7 +118,6 @@
     }
 </script>
 
-
 <main>
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>
@@ -158,5 +160,4 @@
     p {
         font-size: 20px;
     }
-
 </style>

@@ -7,6 +7,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 import random
 from django.db.models import Avg
 
@@ -26,41 +27,6 @@ class RandomTextView(APIView):
         random_text = random.choice(texts)
         serializer = TextSerializer(random_text)
         return Response(serializer.data)
-
-class ResultCreateView(generics.CreateAPIView):
-    queryset = Result.objects.all()
-    serializer_class = ResultSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        user = self.request.user
-        text_id = self.request.data.get('text')
-        try:
-            text = Text.objects.get(id=text_id)
-        except Text.DoesNotExist:
-            raise serializers.ValidationError("Text with this ID does not exist.")
-        serializer.save(user=user, text=text)
-
-class UserResultsView(generics.ListAPIView):
-    serializer_class = ResultSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return Result.objects.filter(user_id=user_id)
-
-class UserStatisticsView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, user_id):
-        results = Result.objects.filter(user_id=user_id)
-        avg_wpm = results.aggregate(Avg('wpm'))['wpm__avg']
-        avg_accuracy = results.aggregate(Avg('accuracy'))['accuracy__avg']
-        return Response({
-            'average_wpm': avg_wpm,
-            'average_accuracy': avg_accuracy,
-            'total_results': results.count()
-        })
 
 class RegisterSerializer(ModelSerializer):
     class Meta:
@@ -104,3 +70,41 @@ class DeleteTextView(generics.DestroyAPIView):
     queryset = Text.objects.all()
     serializer_class = TextSerializer
     permission_classes = [IsAuthenticated]
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Result
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
+class ResultView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+
+        wpm = data.get('wpm')
+        accuracy = data.get('accuracy')
+
+        if wpm is None or accuracy is None:
+            return Response({"error": "WPM and accuracy are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        result = Result.objects.create(user=request.user, wpm=wpm, accuracy=accuracy)
+        result.save()
+
+        return Response({"message": "Result saved successfully"}, status=status.HTTP_201_CREATED)    
+    
+class UserResultsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        results = Result.objects.filter(user=request.user)
+        data = [
+            {
+                'wpm': result.wpm,
+                'accuracy': result.accuracy,
+                'created_at': result.created_at,
+            }
+            for result in results
+        ]
+        return Response(data)
