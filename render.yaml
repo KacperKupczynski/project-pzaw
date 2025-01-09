@@ -1,13 +1,13 @@
 databases:
   - name: backenddb
     plan: free
-    databaseName: backend
-    user: mysite
+    databaseName: backenddb
+    user: backend
 
 services:
   - type: web
     plan: free
-    name: mysite
+    name: backend
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "python -m uvicorn backend.asgi:application --host 0.0.0.0 --port 8000"
