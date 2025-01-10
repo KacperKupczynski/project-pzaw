@@ -28,13 +28,7 @@ Maybe some day I'll deploy this (i've tried).
     ```bash
     python manage.py migrate
     ```
-
-5. **Collect static files**:
-    ```bash
-    python manage.py collectstatic --no-input
-    ```
-
-6. **Run the development server**:
+5. **Run the development server**:
     ```bash
     python manage.py runserver
     ```

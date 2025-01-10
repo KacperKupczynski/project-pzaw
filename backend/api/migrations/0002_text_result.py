@@ -4,6 +4,11 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
+def add_sample_text(apps, schema_editor):
+    Text = apps.get_model('api', 'Text')
+    Text.objects.create(content="This is a sample text for typing practice.")
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -26,8 +31,9 @@ class Migration(migrations.Migration):
                 ('wpm', models.FloatField()),
                 ('accuracy', models.FloatField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.user')),
-                ('text', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.text')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='auth.User')),
+                ('text', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.Text')),
             ],
         ),
+        migrations.RunPython(add_sample_text),
     ]
