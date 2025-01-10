@@ -1,4 +1,6 @@
 <script>
+    import { navigate } from "svelte-routing";
+
     let username = '';
     let password = '';
     let successMessage = '';
@@ -37,6 +39,7 @@
     </form>
     {#if successMessage}
         <p style="color: green;">{successMessage}</p>
+        <button on:click={navigate("/login")}>Login</button>
     {/if}
     {#if errorMessage}
         <p style="color: red;">{errorMessage}</p>

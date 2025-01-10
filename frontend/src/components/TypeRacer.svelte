@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import { typeRacer, updateTypeRacer } from '../stores/typeRacer.js';
     import { get } from 'svelte/store';
+    import { navigate } from 'svelte-routing';
 
     let text = '';
     let input = '';
@@ -14,7 +15,7 @@
     let textObject = null;
     let showModal = false;
 
-    onMount(() => {
+    function fetchText() {
         fetch('/api/text/', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -34,6 +35,10 @@
         .catch(error => {
             errorMessage = error.message;
         });
+    }
+
+    onMount(() => {
+        fetchText();
     });
 
     function start() {
@@ -125,7 +130,12 @@
     }
 
     function playAgain() {
-        location.reload();
+        input = '';
+        time = 0;
+        isRunning = false;
+        letterStates = text.split('').map(letter => ({ letter, state: 'default' }));
+        showModal = false;
+        fetchText();
     }
 </script>
 

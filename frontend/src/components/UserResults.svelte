@@ -50,7 +50,7 @@
             <ul>
                 {#each results as result}
                     <li>
-                        {result.wpm} WPM, {formatDate(result.created_at)}
+                        {Math.round(result.wpm)} WPM, {formatDate(result.created_at)}
                     </li>
                 {/each}
             </ul>

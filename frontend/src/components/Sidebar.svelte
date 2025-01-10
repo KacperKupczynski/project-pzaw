@@ -1,4 +1,5 @@
 <script>
+    import { navigate } from 'svelte-routing';
     import { auth, logout } from '../stores/auth.js';
 
     let username;
@@ -16,6 +17,7 @@
         <img src="/logo.png" alt="Logo" />
     </a>
     <ul>
+        <!-- to do - use navigate from svelte routing instead -->
         <li><a href="/">Home</a></li>
         <li><a href="/typeracer">Type Racing</a></li>
         <li><a href="/addtext">Add text</a></li>

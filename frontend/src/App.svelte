@@ -6,6 +6,7 @@
   import Login from './components/Login.svelte';
   import Addtext from './components/Addtext.svelte';
   import TextList from './components/TextList.svelte';
+  import Register from './components/Register.svelte';
   import { auth } from './stores/auth.js';
   import UserResults from './components/UserResults.svelte';
   import { onMount } from 'svelte';
@@ -35,6 +36,7 @@
   <Router>
     <Route path="/" component={Login} />
     <Route path="/login" component={Login} />
+    <Route path="/register" component={Register} />
   </Router>
 {/if}
 
